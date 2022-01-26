@@ -5,20 +5,29 @@ import { Container, Account, Title, Subtitle } from "./styles";
 import { ButtonText } from "../../components/ButtonText";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
+import { Alert } from "react-native";
 
 export function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState<boolean>(false);
 
-  async function handleSignInWithEmailAndPassword() {
-    const { user } = await auth().signInWithEmailAndPassword(email, password);
-    console.log(user);
+  function handleSignInWithEmailAndPassword() {
+    setLoading(true);
+    auth()
+      .signInWithEmailAndPassword(email, password)
+      .catch(() => {
+        Alert.alert("Erro ao logar", "Verifique seus dados e tente novamente.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
   return (
     <Container>
       <Title>MyListShopping</Title>
-      <Subtitle>monte sua lista de compra te ajudar nas compras</Subtitle>
+      <Subtitle>monte sua lista de compra</Subtitle>
 
       <Input
         placeholder="e-mail"
@@ -28,7 +37,12 @@ export function SignIn() {
 
       <Input placeholder="senha" secureTextEntry onChangeText={setPassword} />
 
-      <Button title="Entrar" onPress={handleSignInWithEmailAndPassword} />
+      <Button
+        title="Entrar"
+        onPress={handleSignInWithEmailAndPassword}
+        disabled={!email || !password}
+        loading={loading}
+      />
 
       {/* <Account>
         <ButtonText title="Recuperar senha" onPress={() => {}} />

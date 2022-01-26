@@ -20,6 +20,8 @@ export function FormBox() {
         created_at: firestore.FieldValue.serverTimestamp(),
       })
       .then(() => {
+        setDescription("");
+        setQuantity(0);
         Alert.alert("Produto adicionado com sucesso!");
       })
       .catch(() => {
@@ -33,6 +35,7 @@ export function FormBox() {
         placeholder="Nome do produto"
         size="medium"
         onChangeText={setDescription}
+        value={description}
       />
 
       <Input
@@ -41,6 +44,7 @@ export function FormBox() {
         size="small"
         style={{ marginHorizontal: 8 }}
         onChangeText={(value) => setQuantity(Number(value))}
+        value={quantity.toString()}
       />
 
       <ButtonIcon
