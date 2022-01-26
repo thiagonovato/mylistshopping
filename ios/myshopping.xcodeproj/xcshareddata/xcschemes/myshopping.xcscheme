@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "myshopping.app"
-               BlueprintName = "myshopping"
-               ReferencedContainer = "container:myshopping.xcodeproj">
+               BuildableName = "mylistshopping.app"
+               BlueprintName = "mylistshopping"
+               ReferencedContainer = "container:mylistshopping.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "myshoppingTests.xctest"
-               BlueprintName = "myshoppingTests"
-               ReferencedContainer = "container:myshopping.xcodeproj">
+               BuildableName = "mylistshoppingTests.xctest"
+               BlueprintName = "mylistshoppingTests"
+               ReferencedContainer = "container:mylistshopping.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "myshopping.app"
-            BlueprintName = "myshopping"
-            ReferencedContainer = "container:myshopping.xcodeproj">
+            BuildableName = "mylistshopping.app"
+            BlueprintName = "mylistshopping"
+            ReferencedContainer = "container:mylistshopping.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "myshopping.app"
-            BlueprintName = "myshopping"
-            ReferencedContainer = "container:myshopping.xcodeproj">
+            BuildableName = "mylistshopping.app"
+            BlueprintName = "mylistshopping"
+            ReferencedContainer = "container:mylistshopping.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
