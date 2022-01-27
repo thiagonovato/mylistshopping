@@ -7,7 +7,7 @@ export default {
     GRAY800: '#B7B7B7',
     GRAY50: '#F0F0F0',
 
-    PURPLE: '#7273E9',
+    PURPLE: '#1e5086',
     GREEN: '#26AE60',
     RED: '#DE180B',
   },
