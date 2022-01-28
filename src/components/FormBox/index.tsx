@@ -22,7 +22,6 @@ export function FormBox() {
       .then(() => {
         setDescription("");
         setQuantity(0);
-        Alert.alert("Produto adicionado com sucesso!");
       })
       .catch(() => {
         Alert.alert("Erro ao cadastrar produto");
@@ -51,6 +50,7 @@ export function FormBox() {
         size="large"
         icon="add-shopping-cart"
         onPress={handleProductAdd}
+        disabled={!description || !quantity}
       />
     </Container>
   );

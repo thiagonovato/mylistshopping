@@ -7,7 +7,7 @@ type TitleProps = {
 export const Container = styled.View`
   background-color: ${({ theme }) => theme.COLORS.WHITE};
   width: 100%;
-  height: 100px;
+  height: 60px;
   background-color: ${({ theme }) => theme.COLORS.GRAY50};
   padding-left: 24px;
   padding-right: 12px;
@@ -27,6 +27,7 @@ export const Title = styled.Text<TitleProps>`
   font-size: 18px;
   font-family: ${({ theme }) => theme.FONTS.MEDIUM};
   text-decoration-line: ${({ done }) => done ? 'line-through' : 'none'};
+  color: ${({ done, theme }) => done ? theme.COLORS.GRAY800 : theme.COLORS.BLACK}
 `;
 
 export const Quantity = styled.Text`
@@ -37,5 +38,6 @@ export const Quantity = styled.Text`
 
 export const Options = styled.View`
     height: 100%;
-    justify-content: space-around; 
+    flex-direction: row;
+    align-items: center;
 `;
