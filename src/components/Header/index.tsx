@@ -1,8 +1,8 @@
-import React from "react";
-import auth from "@react-native-firebase/auth";
+import React, { useContext } from "react";
 import { ButtonIcon } from "../ButtonIcon";
 
 import { Container, Title } from "./styles";
+import AuthContext from "../../contexts/AuthContext";
 
 type Props = {
   title: string;
@@ -10,8 +10,10 @@ type Props = {
 };
 
 export function Header({ title, showLogoutButton = false }: Props) {
+  const { signOut } = useContext(AuthContext);
+
   function handleLogout() {
-    auth().signOut();
+    signOut();
   }
 
   return (
