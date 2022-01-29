@@ -1,10 +1,13 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import firestore from "@react-native-firebase/firestore";
 import { ProductProps } from "../components/Product";
+import AuthContext from "./AuthContext";
+import { Alert } from "react-native";
 
 interface ProductsContextData {
   listAll(): Promise<any>;
   products: ProductProps[];
+  addItem({ description, quantity }: any): Promise<void>;
 }
 
 const ProductsContext = createContext<ProductsContextData>(
@@ -12,8 +15,8 @@ const ProductsContext = createContext<ProductsContextData>(
 );
 
 export const ProductsProvider: React.FC = ({ children }) => {
+  const { user } = useContext(AuthContext);
   const [loadingAuth, setLoadingAuth] = useState<boolean>(false);
-  const [user, setUser] = useState<object | null>(null);
   const [products, setProducts] = useState<ProductProps[]>([]);
 
   async function listAll(): Promise<any> {
@@ -31,8 +34,22 @@ export const ProductsProvider: React.FC = ({ children }) => {
       });
   }
 
+  async function addItem({ description, quantity }: any): Promise<void> {
+    await firestore()
+      .collection("products")
+      .add({
+        description,
+        quantity,
+        done: false,
+        created_at: firestore.FieldValue.serverTimestamp(),
+      })
+      .catch(() => {
+        Alert.alert("Erro ao cadastrar produto");
+      });
+  }
+
   return (
-    <ProductsContext.Provider value={{ listAll, products }}>
+    <ProductsContext.Provider value={{ listAll, products, addItem }}>
       {children}
     </ProductsContext.Provider>
   );

@@ -1,31 +1,22 @@
-import React, { useState } from "react";
-import { Alert } from "react-native";
-import firestore from "@react-native-firebase/firestore";
+import React, { useContext, useState } from "react";
 
 import { Container } from "./styles";
 import { ButtonIcon } from "../ButtonIcon";
 import { Input } from "../Input";
+import ProductsContext from "../../contexts/ProductsContext";
 
 export function FormBox() {
+  const { addItem } = useContext(ProductsContext);
   const [description, setDescription] = useState("");
   const [quantity, setQuantity] = useState(0);
 
   async function handleProductAdd() {
-    firestore()
-      .collection("products")
-      .add({
-        description,
-        quantity,
-        done: false,
-        created_at: firestore.FieldValue.serverTimestamp(),
-      })
-      .then(() => {
-        setDescription("");
-        setQuantity(0);
-      })
-      .catch(() => {
-        Alert.alert("Erro ao cadastrar produto");
-      });
+    await addItem({
+      description,
+      quantity,
+    });
+    setDescription("");
+    setQuantity(0);
   }
 
   return (
