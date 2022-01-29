@@ -8,13 +8,20 @@ interface AuthContextData {
   signOut(): void;
   signIn(email: string, password: string): Promise<void>;
   loadingAuth: boolean;
+  loadingSignUp: boolean;
+  signUp(email: string, password: string): Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export const AuthProvider: React.FC = ({ children }) => {
   const [loadingAuth, setLoadingAuth] = useState<boolean>(false);
+  const [loadingSignUp, setLoadingSignUp] = useState<boolean>(false);
   const [user, setUser] = useState<object | null>(null);
+
+  const messageError = new Map()
+    .set("auth/weak-password", "Senha fraca")
+    .set("auth/email-already-in-use", "Conta já existe");
 
   useEffect(() => {
     auth().onAuthStateChanged((userInfo) => {
@@ -37,10 +44,36 @@ export const AuthProvider: React.FC = ({ children }) => {
         setLoadingAuth(false);
       });
   }
+  async function signUp(email: string, password: string) {
+    setLoadingSignUp(true);
+    auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(() => {
+        Alert.alert("Usuário criado com sucesso.");
+      })
+      .catch((error) => {
+        if (messageError.has(error.code)) {
+          Alert.alert(messageError.get(error.code));
+        } else {
+          Alert.alert("Verifique seus dados e tente novamente.");
+        }
+      })
+      .finally(() => {
+        setLoadingSignUp(false);
+      });
+  }
 
   return (
     <AuthContext.Provider
-      value={{ signed: !!user, user, signOut, signIn, loadingAuth }}
+      value={{
+        signed: !!user,
+        user,
+        signOut,
+        signIn,
+        loadingAuth,
+        signUp,
+        loadingSignUp,
+      }}
     >
       {children}
     </AuthContext.Provider>

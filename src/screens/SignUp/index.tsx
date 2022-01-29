@@ -6,8 +6,8 @@ import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import AuthContext from "../../contexts/AuthContext";
 
-export function SignIn({ navigation }) {
-  const { signIn, loadingAuth } = useContext(AuthContext);
+export function SignUp({ navigation }) {
+  const { signUp, loadingSignUp } = useContext(AuthContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,17 +26,16 @@ export function SignIn({ navigation }) {
       <Input placeholder="senha" secureTextEntry onChangeText={setPassword} />
 
       <Button
-        title="Entrar"
-        onPress={() => signIn(email, password)}
+        title="Criar conta"
+        onPress={() => signUp(email, password)}
         disabled={!email || !password}
-        loading={loadingAuth}
+        loading={loadingSignUp}
       />
 
       <Account>
-        <ButtonText title="Recuperar senha" onPress={() => {}} />
         <ButtonText
-          title="Criar conta"
-          onPress={() => navigation.navigate("SignUp")}
+          title="Voltar para Login"
+          onPress={() => navigation.goBack()}
         />
       </Account>
     </Container>
