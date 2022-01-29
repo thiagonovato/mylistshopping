@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import firestore from "@react-native-firebase/firestore";
 
 import { ButtonIcon } from "../ButtonIcon";
 import { Container, Info, Title, Quantity, Options } from "./styles";
 import { Alert } from "react-native";
+import ProductsContext from "../../contexts/ProductsContext";
 
 export type ProductProps = {
   id: string;
@@ -17,20 +18,15 @@ type Props = {
 };
 
 export function Product({ data }: Props) {
-  function handleDoneToggle() {
-    firestore()
-      .collection("products")
-      .doc(data.id)
-      .update({ done: !data.done });
-  }
+  const { handleDoneToggle, handleDelete } = useContext(ProductsContext);
 
-  function handleDelete() {
+  function handleConfirmDelete() {
     Alert.alert("Atenção", `Deseja realmente excluir ${data.description}?`, [
       { text: "Cancelar", style: "cancel" },
       {
         text: "OK",
         onPress: () => {
-          firestore().collection("products").doc(data.id).delete();
+          handleDelete(data.id);
         },
       },
     ]);
@@ -47,13 +43,16 @@ export function Product({ data }: Props) {
       <Options>
         <ButtonIcon
           icon={data.done ? "undo" : "check"}
-          onPress={handleDoneToggle}
+          onPress={() => handleDoneToggle(data.id, data.done)}
+          style={{
+            marginRight: 10,
+          }}
         />
 
         <ButtonIcon
           icon="delete"
           color="alert"
-          onPress={handleDelete}
+          onPress={handleConfirmDelete}
           disabled={data.done}
         />
       </Options>

@@ -8,6 +8,8 @@ interface ProductsContextData {
   listAll(): Promise<any>;
   products: ProductProps[];
   addItem({ description, quantity }: any): Promise<void>;
+  handleDoneToggle(id: string, done: boolean): Promise<void>;
+  handleDelete(id: string): Promise<void>;
 }
 
 const ProductsContext = createContext<ProductsContextData>(
@@ -21,6 +23,8 @@ export const ProductsProvider: React.FC = ({ children }) => {
 
   async function listAll(): Promise<any> {
     firestore()
+      .collection("list")
+      .doc(user.uid)
       .collection("products")
       .onSnapshot((querySnapshot) => {
         const data = querySnapshot.docs.map((doc) => {
@@ -36,6 +40,8 @@ export const ProductsProvider: React.FC = ({ children }) => {
 
   async function addItem({ description, quantity }: any): Promise<void> {
     await firestore()
+      .collection("list")
+      .doc(user.uid)
       .collection("products")
       .add({
         description,
@@ -48,8 +54,28 @@ export const ProductsProvider: React.FC = ({ children }) => {
       });
   }
 
+  async function handleDoneToggle(id: string, done: boolean): Promise<void> {
+    firestore()
+      .collection("list")
+      .doc(user.uid)
+      .collection("products")
+      .doc(id)
+      .update({ done: !done });
+  }
+
+  async function handleDelete(id: string): Promise<void> {
+    firestore()
+      .collection("list")
+      .doc(user.uid)
+      .collection("products")
+      .doc(id)
+      .delete();
+  }
+
   return (
-    <ProductsContext.Provider value={{ listAll, products, addItem }}>
+    <ProductsContext.Provider
+      value={{ listAll, products, addItem, handleDoneToggle, handleDelete }}
+    >
       {children}
     </ProductsContext.Provider>
   );
