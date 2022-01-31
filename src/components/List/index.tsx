@@ -9,6 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 export type ListProps = {
   id: string;
   name: string;
+  url?: string;
 };
 
 type Props = {

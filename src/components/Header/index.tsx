@@ -36,9 +36,7 @@ export function Header({
         />
       )}
 
-      <Title>
-        {title} {selectedList.name}
-      </Title>
+      <Title>{title}</Title>
 
       {showLogoutButton && (
         <ButtonIcon

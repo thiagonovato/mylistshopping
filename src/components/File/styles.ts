@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
   width: 100%;
-  height: 100px;
+  height: 60px;
   background-color: ${({ theme }) => theme.COLORS.GRAY50};
   padding-left: 12px;
   padding-right: 12px;
@@ -24,12 +24,13 @@ export const Name = styled.Text`
 `;
 
 export const Path = styled.Text`
-  font-size: 14px;
+  font-size: 12px;
   font-family: ${({ theme }) => theme.FONTS.REGULAR};
   color: ${({ theme }) => theme.COLORS.GRAY800};
 `;
 
 export const Options = styled.View`
   height: 100%;
-  justify-content: space-around;
+  flex-direction: row;
+    align-items: center;
 `;

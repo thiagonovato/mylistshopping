@@ -1,24 +1,25 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import firestore from "@react-native-firebase/firestore";
-import { ListProps } from "../components/List";
+import storage from "@react-native-firebase/storage";
 import AuthContext from "./AuthContext";
 import { Alert } from "react-native";
+import { FileProps } from "../components/File";
 
-interface ListsContextData {
+interface UploadContextData {
   listAll(): Promise<any>;
-  lists: ListProps[];
-  addItem({ name }: any): Promise<void>;
-  handleDelete(id: string): Promise<void>;
+  lists: FileProps[];
+  addItem({ name, url }: any): Promise<void>;
+  handleDelete(id: string, path: string): Promise<void>;
   setSelectedList(id: {}): void;
   selectedList: {};
   loadingList: boolean;
 }
 
-const ListsContext = createContext<ListsContextData>({} as ListsContextData);
+const UploadContext = createContext<UploadContextData>({} as UploadContextData);
 
-export const ListsProvider: React.FC = ({ children }) => {
+export const UploadProvider: React.FC = ({ children }) => {
   const { user } = useContext(AuthContext);
-  const [lists, setLists] = useState<ListProps[]>([]);
+  const [lists, setLists] = useState<FileProps[]>([]);
   const [selectedList, setSelectedList] = useState<{}>({});
   const [loadingList, setLoadingList] = useState<boolean>(false);
 
@@ -26,14 +27,14 @@ export const ListsProvider: React.FC = ({ children }) => {
     const subscribe = firestore()
       .collection("user")
       .doc(user.uid)
-      .collection("lists")
+      .collection("uploads")
       .onSnapshot((querySnapshot) => {
         const data = querySnapshot.docs.map((doc) => {
           return {
             id: doc.id,
             ...doc.data(),
           };
-        }) as ListProps[];
+        }) as FileProps[];
 
         setLists(data);
         setLoadingList(true);
@@ -41,31 +42,41 @@ export const ListsProvider: React.FC = ({ children }) => {
     return () => subscribe();
   }
 
-  async function addItem({ name }: any): Promise<void> {
+  async function addItem({ name, url, path }: any): Promise<void> {
     await firestore()
       .collection("user")
       .doc(user.uid)
-      .collection("lists")
+      .collection("uploads")
       .add({
         name,
+        url,
+        path,
         created_at: firestore.FieldValue.serverTimestamp(),
       })
       .catch(() => {
-        Alert.alert("Erro ao cadastrar lista");
+        Alert.alert("Erro ao fazer upload");
       });
   }
 
-  async function handleDelete(id: string): Promise<void> {
-    firestore()
-      .collection("user")
-      .doc(user.uid)
-      .collection("lists")
-      .doc(id)
-      .delete();
+  async function handleDelete(id: string, path: string): Promise<void> {
+    storage()
+      .ref(path)
+      .delete()
+      .then(() => {
+        firestore()
+          .collection("user")
+          .doc(user.uid)
+          .collection("uploads")
+          .doc(id)
+          .delete();
+      })
+      .catch(() => {
+        Alert.alert("", "Erro ao deletar o arquivo");
+      });
   }
 
   return (
-    <ListsContext.Provider
+    <UploadContext.Provider
       value={{
         listAll,
         lists,
@@ -77,8 +88,8 @@ export const ListsProvider: React.FC = ({ children }) => {
       }}
     >
       {children}
-    </ListsContext.Provider>
+    </UploadContext.Provider>
   );
 };
 
-export default ListsContext;
+export default UploadContext;

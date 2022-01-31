@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import storage from "@react-native-firebase/storage";
 
@@ -8,8 +8,12 @@ import { Photo } from "../../components/Photo";
 
 import { Container, Content, Progress, Transferred } from "./styles";
 import { Alert } from "react-native";
+import AuthContext from "../../contexts/AuthContext";
+import UploadContext from "../../contexts/UploadContext";
 
 export function Upload() {
+  const { user } = useContext(AuthContext);
+  const { addItem } = useContext(UploadContext);
   const [image, setImage] = useState("");
   const [bytesTransferred, setBytesTransferred] = useState("");
   const [progress, setProgress] = useState("0");
@@ -32,7 +36,7 @@ export function Upload() {
 
   async function handleUpload() {
     const fileName = new Date().getTime();
-    const reference = storage().ref(`images/${fileName}`);
+    const reference = storage().ref(`images/${user.uid}/${fileName}`);
 
     const uploadTask = reference.putFile(image);
 
@@ -51,6 +55,10 @@ export function Upload() {
 
     uploadTask.then(async () => {
       const imageUrl = await reference.getDownloadURL();
+      addItem({ name: fileName, url: imageUrl, path: reference.fullPath });
+      setProgress("0");
+      setBytesTransferred("");
+      setImage("");
       Alert.alert("Enviado com sucesso.");
     });
   }

@@ -26,7 +26,7 @@ export const ProductsProvider: React.FC = ({ children }) => {
 
   async function listAll(): Promise<any> {
     setLoadingProducts(true);
-    firestore()
+    const subscribe = firestore()
       .collection("user")
       .doc(user.uid)
       .collection("lists")
@@ -43,6 +43,7 @@ export const ProductsProvider: React.FC = ({ children }) => {
         setProducts(data);
         setLoadingProducts(true);
       });
+    return () => subscribe();
   }
 
   async function addItem({ description, quantity }: any): Promise<void> {

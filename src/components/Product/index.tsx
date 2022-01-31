@@ -45,16 +45,11 @@ export function Product({ data }: Props) {
           icon={data.done ? "undo" : "check"}
           onPress={() => handleDoneToggle(data.id, data.done)}
           style={{
-            marginRight: 10,
+            marginRight: 5,
           }}
         />
 
-        <ButtonIcon
-          icon="delete"
-          color="alert"
-          onPress={handleConfirmDelete}
-          disabled={data.done}
-        />
+        <ButtonIcon icon="delete" color="alert" onPress={handleConfirmDelete} />
       </Options>
     </Container>
   );
