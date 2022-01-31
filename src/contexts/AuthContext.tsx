@@ -9,7 +9,9 @@ interface AuthContextData {
   signIn(email: string, password: string): Promise<void>;
   loadingAuth: boolean;
   loadingSignUp: boolean;
+  loadingRecoveryPassword: boolean;
   signUp(email: string, password: string): Promise<void>;
+  recoveryPassword(email: string): Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -17,6 +19,8 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 export const AuthProvider: React.FC = ({ children }) => {
   const [loadingAuth, setLoadingAuth] = useState<boolean>(false);
   const [loadingSignUp, setLoadingSignUp] = useState<boolean>(false);
+  const [loadingRecoveryPassword, setLoadingRecoveryPassword] =
+    useState<boolean>(false);
   const [user, setUser] = useState<object | null>(null);
 
   const messageError = new Map()
@@ -24,9 +28,10 @@ export const AuthProvider: React.FC = ({ children }) => {
     .set("auth/email-already-in-use", "Conta já existe");
 
   useEffect(() => {
-    auth().onAuthStateChanged((userInfo) => {
+    const subscribe = auth().onAuthStateChanged((userInfo) => {
       setUser(userInfo);
     });
+    return () => subscribe();
   }, []);
 
   async function signOut() {
@@ -38,7 +43,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     auth()
       .signInWithEmailAndPassword(email, password)
       .catch(() => {
-        Alert.alert("Erro ao logar", "Verifique seus dados e tente novamente.");
+        Alert.alert("Erro", "Verifique seus dados e tente novamente.");
       })
       .finally(() => {
         setLoadingAuth(false);
@@ -49,17 +54,36 @@ export const AuthProvider: React.FC = ({ children }) => {
     auth()
       .createUserWithEmailAndPassword(email, password)
       .then(() => {
-        Alert.alert("Usuário criado com sucesso.");
+        Alert.alert("", "Usuário criado com sucesso.");
       })
       .catch((error) => {
         if (messageError.has(error.code)) {
-          Alert.alert(messageError.get(error.code));
+          Alert.alert("Erro", messageError.get(error.code));
         } else {
-          Alert.alert("Verifique seus dados e tente novamente.");
+          Alert.alert("Erro", "Verifique seus dados e tente novamente.");
         }
       })
       .finally(() => {
         setLoadingSignUp(false);
+      });
+  }
+
+  async function recoveryPassword(email: string) {
+    setLoadingRecoveryPassword(true);
+    auth()
+      .sendPasswordResetEmail(email)
+      .then(() => {
+        Alert.alert("", "Email de recuperação enviado.");
+      })
+      .catch((error) => {
+        if (messageError.has(error.code)) {
+          Alert.alert("Erro", messageError.get(error.code));
+        } else {
+          Alert.alert("Erro", "Verifique seus dados e tente novamente.");
+        }
+      })
+      .finally(() => {
+        setLoadingRecoveryPassword(false);
       });
   }
 
@@ -73,6 +97,8 @@ export const AuthProvider: React.FC = ({ children }) => {
         loadingAuth,
         signUp,
         loadingSignUp,
+        recoveryPassword,
+        loadingRecoveryPassword,
       }}
     >
       {children}

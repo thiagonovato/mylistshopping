@@ -8,6 +8,7 @@ import { ProductsProvider } from "../contexts/ProductsContext";
 
 import { SignIn } from "../screens/SignIn";
 import { SignUp } from "../screens/SignUp";
+import { RecoveryPassword } from "../screens/RecoveryPassword";
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +31,11 @@ export function Routes() {
           <Stack.Screen
             name="SignUp"
             component={SignUp}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="RecoveryPassword"
+            component={RecoveryPassword}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
