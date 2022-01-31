@@ -2,8 +2,9 @@ import React, { useContext } from "react";
 
 import { ButtonIcon } from "../ButtonIcon";
 import { Container, Info, Title, Options } from "./styles";
-import { Alert } from "react-native";
+import { Alert, TouchableOpacity } from "react-native";
 import ListContext from "../../contexts/ListContext";
+import { useNavigation } from "@react-navigation/native";
 
 export type ListProps = {
   id: string;
@@ -15,7 +16,9 @@ type Props = {
 };
 
 export function List({ data }: Props) {
-  const { handleDelete } = useContext(ListContext);
+  const navigation = useNavigation();
+
+  const { handleDelete, setSelectedList } = useContext(ListContext);
 
   function handleConfirmDelete() {
     Alert.alert("Atenção", `Deseja realmente excluir ${data.name}?`, [
@@ -29,10 +32,17 @@ export function List({ data }: Props) {
     ]);
   }
 
+  function handleScreen(data: {}) {
+    setSelectedList(data);
+    navigation.navigate("Products");
+  }
+
   return (
     <Container>
       <Info>
-        <Title>{data.name}</Title>
+        <TouchableOpacity onPress={() => handleScreen(data)}>
+          <Title>{data.name}</Title>
+        </TouchableOpacity>
       </Info>
 
       <Options>

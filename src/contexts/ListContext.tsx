@@ -9,6 +9,9 @@ interface ListsContextData {
   lists: ListProps[];
   addItem({ name }: any): Promise<void>;
   handleDelete(id: string): Promise<void>;
+  setSelectedList(id: {}): void;
+  selectedList: {};
+  loadingList: boolean;
 }
 
 const ListsContext = createContext<ListsContextData>({} as ListsContextData);
@@ -16,6 +19,8 @@ const ListsContext = createContext<ListsContextData>({} as ListsContextData);
 export const ListsProvider: React.FC = ({ children }) => {
   const { user } = useContext(AuthContext);
   const [lists, setLists] = useState<ListProps[]>([]);
+  const [selectedList, setSelectedList] = useState<{}>({});
+  const [loadingList, setLoadingList] = useState<boolean>(false);
 
   async function listAll(): Promise<any> {
     firestore()
@@ -32,6 +37,7 @@ export const ListsProvider: React.FC = ({ children }) => {
         }) as ListProps[];
 
         setLists(data);
+        setLoadingList(true);
       });
   }
 
@@ -59,7 +65,17 @@ export const ListsProvider: React.FC = ({ children }) => {
   }
 
   return (
-    <ListsContext.Provider value={{ listAll, lists, addItem, handleDelete }}>
+    <ListsContext.Provider
+      value={{
+        listAll,
+        lists,
+        addItem,
+        handleDelete,
+        setSelectedList,
+        selectedList,
+        loadingList,
+      }}
+    >
       {children}
     </ListsContext.Provider>
   );

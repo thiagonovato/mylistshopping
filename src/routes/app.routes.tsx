@@ -1,5 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { MaterialIcons } from "@expo/vector-icons";
 
 import theme from "../theme";
@@ -11,6 +12,7 @@ import { Platform } from "react-native";
 import { Lists } from "../screens/Lists";
 
 const { Navigator, Screen } = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 export function AppRoutes() {
   return (

@@ -3,14 +3,24 @@ import { ButtonIcon } from "../ButtonIcon";
 
 import { Container, Title } from "./styles";
 import AuthContext from "../../contexts/AuthContext";
+import { ButtonBack } from "../ButtonBack";
+import { useNavigation } from "@react-navigation/native";
+import ListsContext from "../../contexts/ListContext";
 
 type Props = {
   title: string;
   showLogoutButton?: boolean;
+  showBackButton?: boolean;
 };
 
-export function Header({ title, showLogoutButton = false }: Props) {
+export function Header({
+  title,
+  showLogoutButton = false,
+  showBackButton = false,
+}: Props) {
+  const navigation = useNavigation();
   const { signOut } = useContext(AuthContext);
+  const { selectedList } = useContext(ListsContext);
 
   function handleLogout() {
     signOut();
@@ -18,7 +28,17 @@ export function Header({ title, showLogoutButton = false }: Props) {
 
   return (
     <Container showLogoutButton={showLogoutButton}>
-      <Title>{title}</Title>
+      {showBackButton && (
+        <ButtonBack
+          onPress={() => navigation.goBack()}
+          icon="back"
+          style={{ marginTop: 20 }}
+        />
+      )}
+
+      <Title>
+        {title} {selectedList.name}
+      </Title>
 
       {showLogoutButton && (
         <ButtonIcon

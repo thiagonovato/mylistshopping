@@ -10,6 +10,7 @@ import { SignIn } from "../screens/SignIn";
 import { SignUp } from "../screens/SignUp";
 import { RecoveryPassword } from "../screens/RecoveryPassword";
 import { ListsProvider } from "../contexts/ListContext";
+import { Products } from "../screens/Products";
 
 const Stack = createNativeStackNavigator();
 
@@ -21,7 +22,19 @@ export function Routes() {
       {signed ? (
         <ListsProvider>
           <ProductsProvider>
-            <AppRoutes />
+            {/* <AppRoutes /> */}
+            <Stack.Navigator initialRouteName="Home">
+              <Stack.Screen
+                name="Home"
+                component={AppRoutes}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Products"
+                component={Products}
+                options={{ headerShown: false }}
+              />
+            </Stack.Navigator>
           </ProductsProvider>
         </ListsProvider>
       ) : (
