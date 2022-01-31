@@ -23,7 +23,7 @@ export const ProductsProvider: React.FC = ({ children }) => {
 
   async function listAll(): Promise<any> {
     firestore()
-      .collection("list")
+      .collection("user")
       .doc(user.uid)
       .collection("products")
       .onSnapshot((querySnapshot) => {
@@ -40,7 +40,7 @@ export const ProductsProvider: React.FC = ({ children }) => {
 
   async function addItem({ description, quantity }: any): Promise<void> {
     await firestore()
-      .collection("list")
+      .collection("user")
       .doc(user.uid)
       .collection("products")
       .add({
@@ -56,7 +56,7 @@ export const ProductsProvider: React.FC = ({ children }) => {
 
   async function handleDoneToggle(id: string, done: boolean): Promise<void> {
     firestore()
-      .collection("list")
+      .collection("user")
       .doc(user.uid)
       .collection("products")
       .doc(id)
@@ -65,7 +65,7 @@ export const ProductsProvider: React.FC = ({ children }) => {
 
   async function handleDelete(id: string): Promise<void> {
     firestore()
-      .collection("list")
+      .collection("user")
       .doc(user.uid)
       .collection("products")
       .doc(id)

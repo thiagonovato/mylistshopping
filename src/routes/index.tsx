@@ -9,6 +9,7 @@ import { ProductsProvider } from "../contexts/ProductsContext";
 import { SignIn } from "../screens/SignIn";
 import { SignUp } from "../screens/SignUp";
 import { RecoveryPassword } from "../screens/RecoveryPassword";
+import { ListsProvider } from "../contexts/ListContext";
 
 const Stack = createNativeStackNavigator();
 
@@ -18,9 +19,11 @@ export function Routes() {
   return (
     <NavigationContainer>
       {signed ? (
-        <ProductsProvider>
-          <AppRoutes />
-        </ProductsProvider>
+        <ListsProvider>
+          <ProductsProvider>
+            <AppRoutes />
+          </ProductsProvider>
+        </ListsProvider>
       ) : (
         <Stack.Navigator initialRouteName="SignIn">
           <Stack.Screen
