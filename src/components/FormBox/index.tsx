@@ -8,7 +8,7 @@ import ProductsContext from "../../contexts/ProductsContext";
 export function FormBox() {
   const { addItem } = useContext(ProductsContext);
   const [description, setDescription] = useState("");
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(1);
 
   async function handleProductAdd() {
     await addItem({
@@ -16,7 +16,7 @@ export function FormBox() {
       quantity,
     });
     setDescription("");
-    setQuantity(0);
+    setQuantity(1);
   }
 
   return (
