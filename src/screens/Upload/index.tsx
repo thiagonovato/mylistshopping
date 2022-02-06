@@ -1,22 +1,61 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import {
+  Alert,
+  Text,
+  TouchableOpacity,
+  View,
+  Switch,
+  Button,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { Camera } from "expo-camera";
+
 import storage from "@react-native-firebase/storage";
 
-import { Button } from "../../components/Button";
+import { Button as ButtonSend } from "../../components/Button";
 import { Header } from "../../components/Header";
 import { Photo } from "../../components/Photo";
 
-import { Container, Content, Progress, Transferred } from "./styles";
-import { Alert } from "react-native";
+import {
+  Container,
+  Content,
+  Progress,
+  styles,
+  Transferred,
+  EmptyPhotoContainer,
+} from "./styles";
 import AuthContext from "../../contexts/AuthContext";
 import UploadContext from "../../contexts/UploadContext";
+import { PhotoSend } from "../../components/PhotoSend";
+import { ButtonTakePhoto } from "../../components/ButtonTakePhoto";
 
 export function Upload() {
+  const cameraRef = useRef();
+  const [hasPermission, setHasPermission] = useState(false);
+  const [type, setType] = useState(Camera.Constants.Type.back);
+  const [startCamera, setStartCamera] = useState(false);
+  const [isCameraReady, setIsCameraReady] = useState(false);
+
   const { user } = useContext(AuthContext);
   const { addItem } = useContext(UploadContext);
   const [image, setImage] = useState("");
   const [bytesTransferred, setBytesTransferred] = useState("");
   const [progress, setProgress] = useState("0");
+
+  const onCameraReady = () => {
+    setIsCameraReady(true);
+  };
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(status === "granted");
+    })();
+  }, []);
+
+  async function closeCamera() {
+    setStartCamera(false);
+  }
 
   async function handlePickImage() {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -32,6 +71,13 @@ export function Upload() {
         setImage(result.uri);
       }
     }
+  }
+
+  async function handlePickPhoto() {
+    const options = { aspect: [4, 4], quality: 1 };
+    const data = await await cameraRef.current.takePictureAsync(options);
+    setImage(data.uri);
+    setStartCamera(false);
   }
 
   async function handleUpload() {
@@ -63,18 +109,74 @@ export function Upload() {
     });
   }
 
+  if (hasPermission === null) {
+    return <View />;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
+
   return (
     <Container>
       <Header title="Upload de Fotos" />
 
+      {startCamera && (
+        <View style={styles.container}>
+          <Camera
+            style={styles.camera}
+            ratio="16:9"
+            type={type}
+            ref={cameraRef}
+            onCameraReady={onCameraReady}
+          >
+            {/* <View style={styles.boxCamera}>
+              <EmptyPhotoContainer />
+            </View> */}
+            <View style={styles.buttonContainer}>
+              <View style={styles.buttonViewContainer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setStartCamera(false);
+                    setImage("");
+                  }}
+                >
+                  <Text style={styles.buttonBack}>Voltar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    handlePickPhoto();
+                  }}
+                ></TouchableOpacity>
+                <TouchableOpacity onPress={() => {}}></TouchableOpacity>
+              </View>
+            </View>
+          </Camera>
+        </View>
+      )}
+
       <Content>
-        <Photo uri={image} onPress={handlePickImage} />
+        {!startCamera && (
+          <>
+            <ButtonTakePhoto
+              title="Tirar foto"
+              onPress={() => {
+                setStartCamera(true);
+                setImage("");
+              }}
+            />
+            <PhotoSend uri={image} onPress={handlePickImage} />
+          </>
+        )}
+        {!!image && (
+          <>
+            <ButtonSend title="Enviar" onPress={handleUpload} />
 
-        <Button title="Fazer upload" onPress={handleUpload} />
+            <Progress>{progress}%</Progress>
 
-        <Progress>{progress}%</Progress>
-
-        <Transferred>{bytesTransferred}</Transferred>
+            <Transferred>{bytesTransferred}</Transferred>
+          </>
+        )}
       </Content>
     </Container>
   );
