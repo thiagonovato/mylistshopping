@@ -10,6 +10,8 @@ export default {
     PURPLE: '#1e5086',
     GREEN: '#26AE60',
     RED: '#DE180B',
+
+    GOOGLE_BLUE: '#4285F4'
   },
 
   FONTS: {

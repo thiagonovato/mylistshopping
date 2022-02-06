@@ -1294,7 +1294,7 @@
   dependencies:
     cross-spawn "^6.0.5"
 
-"@expo/vector-icons@^12.0.4":
+"@expo/vector-icons@^12.0.4", "@expo/vector-icons@^12.0.5":
   version "12.0.5"
   resolved "https://registry.yarnpkg.com/@expo/vector-icons/-/vector-icons-12.0.5.tgz#bc508ad05fb7e9a3e008704977cfec6c18aa7728"
   integrity sha512-zWvHBmkpbi1KrPma6Y+r/bsGI6MjbM1MBSe6W9A4uYMLhNI5NR4JtTnqxhf7g1XdpaDtBdv5aOWKEx4d5rxnhg==
@@ -1504,6 +1504,11 @@
   version "14.3.0"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/storage/-/storage-14.3.0.tgz#f5a5bd24d65595c498a405ef416d20f430a89f1d"
   integrity sha512-9uhqM3a+DiBPtnrCLQ4dpxCTpAD7Cbhk+cMVCSdkvzRU9W8DBcf4mnKgv64ytSiRLOxpVeDeFzaoQzjPXtLlag==
+
+"@react-native-google-signin/google-signin@^7.0.4":
+  version "7.0.4"
+  resolved "https://registry.yarnpkg.com/@react-native-google-signin/google-signin/-/google-signin-7.0.4.tgz#b557be28dac0af8fd020010b8a9670ae65bedba8"
+  integrity sha512-N5uVDlTp/mgpa5gFr6VIr8pldt68jlmHOlqcTSnSwBuZXusXMiK53DCIOWuYk4OJ1rlb8Esa9J4FJwUB0psU9Q==
 
 "@react-native/assets@1.0.0":
   version "1.0.0"

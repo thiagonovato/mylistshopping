@@ -1,5 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import auth from "@react-native-firebase/auth";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+
 import { Alert } from "react-native";
 
 interface AuthContextData {
@@ -10,8 +12,10 @@ interface AuthContextData {
   loadingAuth: boolean;
   loadingSignUp: boolean;
   loadingRecoveryPassword: boolean;
+  loadingSignInWithGoogle: boolean;
   signUp(email: string, password: string): Promise<void>;
   recoveryPassword(email: string): Promise<void>;
+  signInWithGoogle(): void;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -19,6 +23,8 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 export const AuthProvider: React.FC = ({ children }) => {
   const [loadingAuth, setLoadingAuth] = useState<boolean>(false);
   const [loadingSignUp, setLoadingSignUp] = useState<boolean>(false);
+  const [loadingSignInWithGoogle, setLoadingSignInWithGoogle] =
+    useState<boolean>(false);
   const [loadingRecoveryPassword, setLoadingRecoveryPassword] =
     useState<boolean>(false);
   const [user, setUser] = useState<object | null>(null);
@@ -48,6 +54,17 @@ export const AuthProvider: React.FC = ({ children }) => {
       .finally(() => {
         setLoadingAuth(false);
       });
+  }
+
+  async function signInWithGoogle() {
+    try {
+      setLoadingSignInWithGoogle(true);
+      const { idToken } = await GoogleSignin.signIn();
+      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+      return auth().signInWithCredential(googleCredential);
+    } finally {
+      setLoadingSignInWithGoogle(false);
+    }
   }
   async function signUp(email: string, password: string) {
     setLoadingSignUp(true);
@@ -99,6 +116,8 @@ export const AuthProvider: React.FC = ({ children }) => {
         loadingSignUp,
         recoveryPassword,
         loadingRecoveryPassword,
+        signInWithGoogle,
+        loadingSignInWithGoogle,
       }}
     >
       {children}
