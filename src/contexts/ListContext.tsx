@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import firestore from "@react-native-firebase/firestore";
-import { ListProps } from "../components/List";
-import AuthContext from "./AuthContext";
-import { Alert } from "react-native";
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import firestore from '@react-native-firebase/firestore';
+import { ListProps } from '../components/List';
+import AuthContext from './AuthContext';
+import { Alert } from 'react-native';
 
 interface ListsContextData {
   listAll(): Promise<any>;
@@ -24,42 +24,44 @@ export const ListsProvider: React.FC = ({ children }) => {
 
   async function listAll(): Promise<any> {
     const subscribe = firestore()
-      .collection("user")
+      .collection('user')
       .doc(user.uid)
-      .collection("lists")
+      .collection('lists')
       .onSnapshot((querySnapshot) => {
-        const data = querySnapshot.docs.map((doc) => {
-          return {
-            id: doc.id,
-            ...doc.data(),
-          };
-        }) as ListProps[];
+        if (querySnapshot !== null) {
+          const data = querySnapshot.docs.map((doc) => {
+            return {
+              id: doc.id,
+              ...doc.data(),
+            };
+          }) as ListProps[];
 
-        setLists(data);
-        setLoadingList(true);
+          setLists(data);
+          setLoadingList(true);
+        }
       });
     return () => subscribe();
   }
 
   async function addItem({ name }: any): Promise<void> {
     await firestore()
-      .collection("user")
+      .collection('user')
       .doc(user.uid)
-      .collection("lists")
+      .collection('lists')
       .add({
         name,
         created_at: firestore.FieldValue.serverTimestamp(),
       })
-      .catch(() => {
-        Alert.alert("Erro ao cadastrar lista");
+      .catch((e) => {
+        Alert.alert('Erro ao cadastrar lista');
       });
   }
 
   async function handleDelete(id: string): Promise<void> {
     firestore()
-      .collection("user")
+      .collection('user')
       .doc(user.uid)
-      .collection("lists")
+      .collection('lists')
       .doc(id)
       .delete();
   }

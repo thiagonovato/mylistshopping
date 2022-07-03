@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
-import { FlatList } from "react-native";
+import React, { useContext, useEffect, useState } from 'react';
+import { FlatList } from 'react-native';
 
-import { styles } from "./styles";
-import ListsContext from "../../contexts/ListContext";
-import { List } from "../List";
+import { styles } from './styles';
+import ListsContext from '../../contexts/ListContext';
+import { List } from '../List';
 
 export function ListsList() {
   const { listAll, lists, loadingList } = useContext(ListsContext);
